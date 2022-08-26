@@ -1,5 +1,5 @@
-refStartbtn = document.querySelector('[data-start]');
-refStopbtn = document.querySelector('[data-stop]');
+const refStartbtn = document.querySelector('[data-start]');
+const refStopbtn = document.querySelector('[data-stop]');
 let intervalID = null;
 
 refStopbtn.disabled = true;
