@@ -6,3 +6,5 @@ function createPromise(position, delay) {
     // Reject
   }
 }
+
+console.log('33333');
