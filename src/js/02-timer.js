@@ -12,20 +12,14 @@ const options = {
   defaultDate: Date.now(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (intervalID) {
-      clearInterval(intervalID);
-      showTime(0);
-    }
     handleData(selectedDates[0]);
   },
 };
 
-const refs = {
-  btnStart: document.querySelector('[data-start]'),
-};
+const refStartBtn = document.querySelector('[data-start]');
 
-refs.btnStart.disabled = true;
-refs.btnStart.addEventListener('click', startTimer);
+refStartBtn.disabled = true;
+refStartBtn.addEventListener('click', startTimer);
 
 // console.log(refs.btnStart);
 // const refDataInput = document.querySelector('imput');
@@ -33,7 +27,7 @@ refs.btnStart.addEventListener('click', startTimer);
 const datePicker = flatpickr('#datetime-picker', options);
 
 function startTimer() {
-  refs.btnStart.disabled = true;
+  refStartBtn.disabled = true;
   timer(selectedDate);
 }
 function timer(date) {
@@ -46,30 +40,57 @@ function timer(date) {
 }
 
 function showTime(time) {
-  console.log(time);
+  console.log(convertMs(time));
 }
 
 function stopShowTime() {
   clearInterval(intervalID);
   showTime(0);
-  console.log('Time is up.');
+  sendMessage('Time is up.');
   // sendMessage(' Please choose a date in the future.');
 }
 
 function checkDate(date) {
   let result = 0;
   time = date - Date.now();
-  if (time > 0) result = time;
+  if (time > M_SECOND) result = time;
   return result;
 }
 
 function handleData(date) {
   selectedDate = Number(datePicker.formatDate(date, 'U')) * M_SECOND;
+  if (intervalID) {
+    clearInterval(intervalID);
+    showTime(0);
+  }
   checkDate(selectedDate)
-    ? (refs.btnStart.disabled = false)
+    ? (refStartBtn.disabled = false)
     : sendMessage(' Please choose a date in the future.');
 }
 
 function sendMessage(message) {
   console.log(message);
 }
+
+function convertMs(ms) {
+  // Number of milliseconds per unit of time
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  // Remaining days
+  const days = Math.floor(ms / day);
+  // Remaining hours
+  const hours = Math.floor((ms % day) / hour);
+  // Remaining minutes
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  // Remaining seconds
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
