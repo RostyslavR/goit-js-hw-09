@@ -46,18 +46,11 @@ const timer = {
     Notify.info(message);
   },
 
-  updateTime(
-    { days, hours, minutes, seconds } = {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    }
-  ) {
-    refTimer.days.textContent = addLeadingZero(days);
-    refTimer.hours.textContent = addLeadingZero(hours);
-    refTimer.minutes.textContent = addLeadingZero(minutes);
-    refTimer.seconds.textContent = addLeadingZero(seconds);
+  updateTime({ days, hours, minutes, seconds }) {
+    refTimer.days.textContent = days;
+    refTimer.hours.textContent = hours;
+    refTimer.minutes.textContent = minutes;
+    refTimer.seconds.textContent = seconds;
   },
 };
 
@@ -81,7 +74,7 @@ function checkDate(date) {
 function handleData(date) {
   if (intervalID) {
     timer.stop('the date has been changed');
-    timer.updateTime();
+    timer.updateTime(convertMs(0));
   }
 
   selectedDate = date;
@@ -102,13 +95,15 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 }
