@@ -1,6 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-const M_SECOND = 1000;
+const TIMER_INTERVAL = 1000;
 let selectedDate = 0;
 let intervalID = null;
 // let timerOn = false;
@@ -12,31 +12,30 @@ const options = {
   defaultDate: Date.now(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    handleData(selectedDates[0]);
+    handleData(selectedDates[0].getTime());
   },
 };
 
 const refStartBtn = document.querySelector('[data-start]');
 
+flatpickr('#datetime-picker', options);
 refStartBtn.disabled = true;
 refStartBtn.addEventListener('click', startTimer);
 
 // console.log(refs.btnStart);
 // const refDataInput = document.querySelector('imput');
 // const messageOn = false;
-const datePicker = flatpickr('#datetime-picker', options);
 
 function startTimer() {
   refStartBtn.disabled = true;
   timer(selectedDate);
 }
+
 function timer(date) {
-  // timerOn = true;
   intervalID = setInterval(() => {
     time = checkDate(date);
     time ? showTime(time) : stopShowTime();
-  }, 1000);
-  // timerOn = false;
+  }, TIMER_INTERVAL);
 }
 
 function showTime(time) {
@@ -53,17 +52,17 @@ function stopShowTime() {
 function checkDate(date) {
   let result = 0;
   time = date - Date.now();
-  if (time > M_SECOND) result = time;
+  if (time > TIMER_INTERVAL) result = time;
   return result;
 }
 
 function handleData(date) {
-  selectedDate = Number(datePicker.formatDate(date, 'U')) * M_SECOND;
+  selectedDate = date;
   if (intervalID) {
     clearInterval(intervalID);
     showTime(0);
   }
-  checkDate(selectedDate)
+  checkDate(date)
     ? (refStartBtn.disabled = false)
     : sendMessage(' Please choose a date in the future.');
 }
