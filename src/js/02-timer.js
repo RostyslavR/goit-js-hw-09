@@ -42,8 +42,11 @@ const timer = {
   },
 
   stop(message) {
-    clearInterval(intervalID);
-    Notify.info(message);
+    if (intervalID) {
+      clearInterval(intervalID);
+      Notify.info(message);
+    }
+    timer.updateTime(convertMs(0));
   },
 
   updateTime({ days, hours, minutes, seconds }) {
@@ -55,9 +58,7 @@ const timer = {
 };
 
 Notify.init({
-  width: '300px',
   position: 'center-top',
-  closeButton: false,
 });
 flatpickr('#datetime-picker', options);
 refStartBtn.disabled = true;
@@ -72,10 +73,7 @@ function checkDate(date) {
 }
 
 function handleData(date) {
-  if (intervalID) {
-    timer.stop('the date has been changed');
-    timer.updateTime(convertMs(0));
-  }
+  timer.stop('the date has been changed');
 
   selectedDate = date;
   checkDate(date)
