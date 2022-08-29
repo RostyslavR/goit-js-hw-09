@@ -1,2 +1,0 @@
-const e=document.querySelector(".form"),t=document.querySelectorAll("input");function o(e,t){n(Math.random()>.3?"resolve"+e+"   "+t:"Reject"+e+"  "+t)}function n(e){console.log(e)}e.addEventListener("submit",(function(e){let n={};e.preventDefault(),console.log("submit");for(let e of t)n[e.name]=Number(e.value);const{delay:l,step:u,amount:c}=n;for(let e=0;e<c;e+=1)o(e+1,u*e+l)}));
-//# sourceMappingURL=03-promises.4231ea68.js.map
