@@ -67,7 +67,7 @@ refStartBtn.addEventListener('click', timer.start);
 
 function checkDate(date) {
   let result = 0;
-  let time = date - Date.now();
+  const time = date - Date.now();
   if (time > 0) result = time;
   return result;
 }
